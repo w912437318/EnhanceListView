@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * 自定义的BaseAdapter
+     * 自定义的BaseAdapter.
      */
     class MyListAdapter extends BaseAdapter {
         @Override

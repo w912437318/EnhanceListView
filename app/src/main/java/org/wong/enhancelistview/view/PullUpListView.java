@@ -18,7 +18,7 @@ public class PullUpListView extends ListView implements AbsListView.OnScrollList
     // 脚布局相关参数
     private View mFooterView;
     private int mFooterView_height;
-    private float startTouchPosition;
+    private boolean isRefreshing = false;
     //回调接口对象
     private OnRefreshDataListener onRefreshDataListener = null;
 
@@ -63,11 +63,14 @@ public class PullUpListView extends ListView implements AbsListView.OnScrollList
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == SCROLL_STATE_TOUCH_SCROLL && getLastVisiblePosition() >= getCount() - 1) {
-            mFooterView.setPadding(0, 0, 0, 0);
-            setSelection(getCount() - 1);
-            if (onRefreshDataListener != null) {
-                onRefreshDataListener.onRefresh();
+        if (!isRefreshing) {
+            if (scrollState == SCROLL_STATE_TOUCH_SCROLL && getLastVisiblePosition() >= getCount() - 1) {
+                isRefreshing = true;
+                mFooterView.setPadding(0, 0, 0, 0);
+                setSelection(getCount() - 1);
+                if (onRefreshDataListener != null) {
+                    onRefreshDataListener.onRefresh();
+                }
             }
         }
     }
@@ -83,5 +86,6 @@ public class PullUpListView extends ListView implements AbsListView.OnScrollList
 
     public void onRefreshComplete() {
         resetFooterView();
+        isRefreshing = false;
     }
 }
